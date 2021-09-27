@@ -5,10 +5,9 @@ source <(grep = resources.conf)
 echo $check_url:$check_port
 echo $send_url:$send_port
 
-server=ya.ru
-if nc -zv $check_url $check_port 2>/dev/null; then
-    echo "$server ✓"
+if nc -zv -w 5 $check_url $check_port 2>/dev/null; then
+    echo "$check_url ✓"
 else
-    echo "$server ✗"
-    netcat $send_url $send_port <<< "{\"failed\" : \"$check_url:$check_port\"}"
+    echo "$check_url ✗"
+    nc $send_url $send_port <<< "{\"failed\" : \"$check_url:$check_port\"}"
 fi
